@@ -2,7 +2,7 @@ import "./Graph.css";
 import { useGraphWithCredential } from "@microsoft/teamsfx-react";
 import { Providers, ProviderState } from '@microsoft/mgt-element';
 import { TeamsFxProvider } from '@microsoft/mgt-teamsfx-provider';
-import { Button } from "@fluentui/react-northstar";
+import { Button } from "@fluentui/react-components";
 import { Design } from './Design';
 import { PersonCardFluentUI } from './PersonCardFluentUI';
 import { PersonCardGraphToolkit } from './PersonCardGraphToolkit';

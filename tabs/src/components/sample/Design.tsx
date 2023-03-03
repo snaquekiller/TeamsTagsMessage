@@ -1,4 +1,4 @@
-import { Button, CardFooter, CardHeader, CardBody, Card, Flex, Text } from "@fluentui/react-northstar";
+import { Button, CardFooter, CardHeader, CardBody, Card, Flex, Text } from "@fluentui/react-components";
 
 export function Design() {
   return (

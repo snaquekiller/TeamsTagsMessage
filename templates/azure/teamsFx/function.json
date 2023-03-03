@@ -1,0 +1,78 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "metadata": {
+    "_generator": {
+      "name": "bicep",
+      "version": "0.14.6.61914",
+      "templateHash": "462234976569255025"
+    }
+  },
+  "parameters": {
+    "provisionParameters": {
+      "type": "secureObject"
+    },
+    "provisionOutputs": {
+      "type": "object"
+    },
+    "currentConfigs": {
+      "type": "secureObject"
+    },
+    "currentAppSettings": {
+      "type": "secureObject"
+    }
+  },
+  "variables": {
+    "functionAppName": "[split(parameters('provisionOutputs').functionOutput.value.functionAppResourceId, '/')[8]]",
+    "m365ClientId": "[parameters('provisionParameters').m365ClientId]",
+    "m365ClientSecret": "[parameters('provisionParameters').m365ClientSecret]",
+    "m365TenantId": "[parameters('provisionParameters').m365TenantId]",
+    "m365OauthAuthorityHost": "[parameters('provisionParameters').m365OauthAuthorityHost]",
+    "oauthAuthority": "[uri(variables('m365OauthAuthorityHost'), variables('m365TenantId'))]",
+    "tabAppDomain": "[parameters('provisionOutputs').frontendHostingOutput.value.domain]",
+    "tabAppEndpoint": "[parameters('provisionOutputs').frontendHostingOutput.value.endpoint]",
+    "m365ApplicationIdUri": "[format('api://{0}/{1}', variables('tabAppDomain'), variables('m365ClientId'))]",
+    "teamsMobileOrDesktopAppClientId": "1fec8e78-bce4-4aaf-ab1b-5451cc387264",
+    "teamsWebAppClientId": "5e3ce6c0-2b1f-4285-8d4b-75ee78787346",
+    "officeWebAppClientId1": "4345a7b9-9a63-4910-a426-35363201d503",
+    "officeWebAppClientId2": "4765445b-32c6-49b0-83e6-1d93765276ca",
+    "outlookDesktopAppClientId": "d3590ed6-52b3-4102-aeff-aad2292ab01c",
+    "outlookWebAppClientId": "00000002-0000-0ff1-ce00-000000000000",
+    "authorizedClientApplicationIds": "[format('{0};{1};{2};{3};{4};{5}', variables('teamsMobileOrDesktopAppClientId'), variables('teamsWebAppClientId'), variables('officeWebAppClientId1'), variables('officeWebAppClientId2'), variables('outlookDesktopAppClientId'), variables('outlookWebAppClientId'))]",
+    "currentAllowedOrigins": "[if(empty(parameters('currentConfigs').cors), createArray(), parameters('currentConfigs').cors.allowedOrigins)]"
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Web/sites/config",
+      "apiVersion": "2021-02-01",
+      "name": "[format('{0}/web', variables('functionAppName'))]",
+      "kind": "functionapp",
+      "properties": {
+        "cors": {
+          "allowedOrigins": "[union(variables('currentAllowedOrigins'), createArray(variables('tabAppEndpoint')))]"
+        }
+      }
+    },
+    {
+      "type": "Microsoft.Web/sites/config",
+      "apiVersion": "2021-02-01",
+      "name": "[format('{0}/appsettings', variables('functionAppName'))]",
+      "properties": "[union(createObject('API_ENDPOINT', parameters('provisionOutputs').functionOutput.value.functionEndpoint, 'ALLOWED_APP_IDS', variables('authorizedClientApplicationIds'), 'M365_CLIENT_ID', variables('m365ClientId'), 'M365_CLIENT_SECRET', variables('m365ClientSecret'), 'M365_TENANT_ID', variables('m365TenantId'), 'M365_AUTHORITY_HOST', variables('m365OauthAuthorityHost'), 'M365_APPLICATION_ID_URI', variables('m365ApplicationIdUri'), 'IDENTITY_ID', parameters('provisionOutputs').identityOutput.value.identityClientId), parameters('currentAppSettings'))]"
+    },
+    {
+      "type": "Microsoft.Web/sites/config",
+      "apiVersion": "2021-02-01",
+      "name": "[format('{0}/authsettings', variables('functionAppName'))]",
+      "properties": {
+        "enabled": true,
+        "defaultProvider": "AzureActiveDirectory",
+        "clientId": "[variables('m365ClientId')]",
+        "issuer": "[format('{0}/v2.0', variables('oauthAuthority'))]",
+        "allowedAudiences": [
+          "[variables('m365ClientId')]",
+          "[variables('m365ApplicationIdUri')]"
+        ]
+      }
+    }
+  ]
+}

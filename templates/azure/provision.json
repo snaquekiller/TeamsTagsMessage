@@ -1,0 +1,316 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "metadata": {
+    "_generator": {
+      "name": "bicep",
+      "version": "0.14.6.61914",
+      "templateHash": "5243450779438721432"
+    }
+  },
+  "parameters": {
+    "provisionParameters": {
+      "type": "secureObject"
+    }
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2020-10-01",
+      "name": "frontendHostingProvision",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "provisionParameters": {
+            "value": "[parameters('provisionParameters')]"
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.14.6.61914",
+              "templateHash": "2439363020080256391"
+            }
+          },
+          "parameters": {
+            "provisionParameters": {
+              "type": "secureObject"
+            }
+          },
+          "variables": {
+            "resourceBaseName": "[parameters('provisionParameters').resourceBaseName]",
+            "storageName": "[if(contains(parameters('provisionParameters'), 'frontendHostingStorageName'), parameters('provisionParameters').frontendHostingStorageName, format('{0}tab', variables('resourceBaseName')))]",
+            "storageSku": "[if(contains(parameters('provisionParameters'), 'frontendHostingStorageSku'), parameters('provisionParameters').frontendHostingStorageSku, 'Standard_LRS')]"
+          },
+          "resources": [
+            {
+              "type": "Microsoft.Storage/storageAccounts",
+              "apiVersion": "2021-06-01",
+              "name": "[variables('storageName')]",
+              "kind": "StorageV2",
+              "location": "[resourceGroup().location]",
+              "properties": {
+                "supportsHttpsTrafficOnly": true
+              },
+              "sku": {
+                "name": "[variables('storageSku')]"
+              }
+            }
+          ],
+          "outputs": {
+            "resourceId": {
+              "type": "string",
+              "value": "[resourceId('Microsoft.Storage/storageAccounts', variables('storageName'))]"
+            },
+            "endpoint": {
+              "type": "string",
+              "value": "[format('https://{0}', replace(replace(reference(resourceId('Microsoft.Storage/storageAccounts', variables('storageName')), '2021-06-01').primaryEndpoints.web, 'https://', ''), '/', ''))]"
+            },
+            "domain": {
+              "type": "string",
+              "value": "[replace(replace(reference(resourceId('Microsoft.Storage/storageAccounts', variables('storageName')), '2021-06-01').primaryEndpoints.web, 'https://', ''), '/', '')]"
+            },
+            "indexPath": {
+              "type": "string",
+              "value": "/index.html#"
+            }
+          }
+        }
+      }
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2020-10-01",
+      "name": "userAssignedIdentityProvision",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "provisionParameters": {
+            "value": "[parameters('provisionParameters')]"
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.14.6.61914",
+              "templateHash": "16553010540943578545"
+            }
+          },
+          "parameters": {
+            "provisionParameters": {
+              "type": "secureObject"
+            }
+          },
+          "variables": {
+            "resourceBaseName": "[parameters('provisionParameters').resourceBaseName]",
+            "identityName": "[if(contains(parameters('provisionParameters'), 'userAssignedIdentityName'), parameters('provisionParameters').userAssignedIdentityName, format('{0}', variables('resourceBaseName')))]"
+          },
+          "resources": [
+            {
+              "type": "Microsoft.ManagedIdentity/userAssignedIdentities",
+              "apiVersion": "2018-11-30",
+              "name": "[variables('identityName')]",
+              "location": "[resourceGroup().location]"
+            }
+          ],
+          "outputs": {
+            "identityName": {
+              "type": "string",
+              "value": "[variables('identityName')]"
+            },
+            "identityClientId": {
+              "type": "string",
+              "value": "[reference(resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('identityName')), '2018-11-30').clientId]"
+            },
+            "identityResourceId": {
+              "type": "string",
+              "value": "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('identityName'))]"
+            },
+            "identityPrincipalId": {
+              "type": "string",
+              "value": "[reference(resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('identityName')), '2018-11-30').principalId]"
+            }
+          }
+        }
+      }
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2020-10-01",
+      "name": "functionProvision",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "provisionParameters": {
+            "value": "[parameters('provisionParameters')]"
+          },
+          "userAssignedIdentityId": {
+            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'userAssignedIdentityProvision'), '2020-10-01').outputs.identityResourceId.value]"
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.14.6.61914",
+              "templateHash": "9929087414846077696"
+            }
+          },
+          "parameters": {
+            "provisionParameters": {
+              "type": "secureObject"
+            },
+            "userAssignedIdentityId": {
+              "type": "string"
+            }
+          },
+          "variables": {
+            "resourceBaseName": "[parameters('provisionParameters').resourceBaseName]",
+            "serverfarmsName": "[if(contains(parameters('provisionParameters'), 'functionServerfarmsName'), parameters('provisionParameters').functionServerfarmsName, format('{0}api', variables('resourceBaseName')))]",
+            "serverfarmsSku": "[if(contains(parameters('provisionParameters'), 'functionServerfarmsSku'), parameters('provisionParameters').functionServerfarmsSku, 'Y1')]",
+            "functionAppName": "[if(contains(parameters('provisionParameters'), 'functionWebappName'), parameters('provisionParameters').functionWebappName, format('{0}api', variables('resourceBaseName')))]",
+            "storageName": "[if(contains(parameters('provisionParameters'), 'functionStorageName'), parameters('provisionParameters').functionStorageName, format('{0}api', variables('resourceBaseName')))]",
+            "storageSku": "[if(contains(parameters('provisionParameters'), 'functionStorageSku'), parameters('provisionParameters').functionStorageSku, 'Standard_LRS')]"
+          },
+          "resources": [
+            {
+              "type": "Microsoft.Web/serverfarms",
+              "apiVersion": "2021-02-01",
+              "name": "[variables('serverfarmsName')]",
+              "kind": "functionapp",
+              "location": "[resourceGroup().location]",
+              "sku": {
+                "name": "[variables('serverfarmsSku')]"
+              },
+              "properties": {}
+            },
+            {
+              "type": "Microsoft.Web/sites",
+              "apiVersion": "2021-02-01",
+              "name": "[variables('functionAppName')]",
+              "kind": "functionapp",
+              "location": "[resourceGroup().location]",
+              "properties": {
+                "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('serverfarmsName'))]",
+                "keyVaultReferenceIdentity": "[parameters('userAssignedIdentityId')]",
+                "httpsOnly": true,
+                "siteConfig": {
+                  "appSettings": [
+                    {
+                      "name": "AzureWebJobsDashboard",
+                      "value": "[format('DefaultEndpointsProtocol=https;AccountName={0};AccountKey={1};EndpointSuffix={2}', variables('storageName'), listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('storageName')), '2021-06-01').keys[0].value, environment().suffixes.storage)]"
+                    },
+                    {
+                      "name": "AzureWebJobsStorage",
+                      "value": "[format('DefaultEndpointsProtocol=https;AccountName={0};AccountKey={1};EndpointSuffix={2}', variables('storageName'), listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('storageName')), '2021-06-01').keys[0].value, environment().suffixes.storage)]"
+                    },
+                    {
+                      "name": "FUNCTIONS_EXTENSION_VERSION",
+                      "value": "~4"
+                    },
+                    {
+                      "name": "FUNCTIONS_WORKER_RUNTIME",
+                      "value": "node"
+                    },
+                    {
+                      "name": "WEBSITE_CONTENTAZUREFILECONNECTIONSTRING",
+                      "value": "[format('DefaultEndpointsProtocol=https;AccountName={0};AccountKey={1};EndpointSuffix={2}', variables('storageName'), listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('storageName')), '2021-06-01').keys[0].value, environment().suffixes.storage)]"
+                    },
+                    {
+                      "name": "WEBSITE_RUN_FROM_PACKAGE",
+                      "value": "1"
+                    },
+                    {
+                      "name": "WEBSITE_NODE_DEFAULT_VERSION",
+                      "value": "~16"
+                    }
+                  ],
+                  "ftpsState": "FtpsOnly"
+                }
+              },
+              "identity": {
+                "type": "UserAssigned",
+                "userAssignedIdentities": {
+                  "[format('{0}', parameters('userAssignedIdentityId'))]": {}
+                }
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.Web/serverfarms', variables('serverfarmsName'))]",
+                "[resourceId('Microsoft.Storage/storageAccounts', variables('storageName'))]"
+              ]
+            },
+            {
+              "type": "Microsoft.Storage/storageAccounts",
+              "apiVersion": "2021-06-01",
+              "name": "[variables('storageName')]",
+              "kind": "StorageV2",
+              "location": "[resourceGroup().location]",
+              "sku": {
+                "name": "[variables('storageSku')]"
+              }
+            }
+          ],
+          "outputs": {
+            "functionEndpoint": {
+              "type": "string",
+              "value": "[format('https://{0}', reference(resourceId('Microsoft.Web/sites', variables('functionAppName')), '2021-02-01').defaultHostName)]"
+            },
+            "functionAppResourceId": {
+              "type": "string",
+              "value": "[resourceId('Microsoft.Web/sites', variables('functionAppName'))]"
+            }
+          }
+        }
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Resources/deployments', 'userAssignedIdentityProvision')]"
+      ]
+    }
+  ],
+  "outputs": {
+    "frontendHostingOutput": {
+      "type": "object",
+      "value": {
+        "teamsFxPluginId": "fx-resource-frontend-hosting",
+        "domain": "[reference(resourceId('Microsoft.Resources/deployments', 'frontendHostingProvision'), '2020-10-01').outputs.domain.value]",
+        "endpoint": "[reference(resourceId('Microsoft.Resources/deployments', 'frontendHostingProvision'), '2020-10-01').outputs.endpoint.value]",
+        "indexPath": "[reference(resourceId('Microsoft.Resources/deployments', 'frontendHostingProvision'), '2020-10-01').outputs.indexPath.value]",
+        "storageResourceId": "[reference(resourceId('Microsoft.Resources/deployments', 'frontendHostingProvision'), '2020-10-01').outputs.resourceId.value]"
+      }
+    },
+    "identityOutput": {
+      "type": "object",
+      "value": {
+        "teamsFxPluginId": "fx-resource-identity",
+        "identityName": "[reference(resourceId('Microsoft.Resources/deployments', 'userAssignedIdentityProvision'), '2020-10-01').outputs.identityName.value]",
+        "identityResourceId": "[reference(resourceId('Microsoft.Resources/deployments', 'userAssignedIdentityProvision'), '2020-10-01').outputs.identityResourceId.value]",
+        "identityClientId": "[reference(resourceId('Microsoft.Resources/deployments', 'userAssignedIdentityProvision'), '2020-10-01').outputs.identityClientId.value]"
+      }
+    },
+    "functionOutput": {
+      "type": "object",
+      "value": {
+        "teamsFxPluginId": "fx-resource-function",
+        "functionAppResourceId": "[reference(resourceId('Microsoft.Resources/deployments', 'functionProvision'), '2020-10-01').outputs.functionAppResourceId.value]",
+        "functionEndpoint": "[reference(resourceId('Microsoft.Resources/deployments', 'functionProvision'), '2020-10-01').outputs.functionEndpoint.value]"
+      }
+    }
+  }
+}

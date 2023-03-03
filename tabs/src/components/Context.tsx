@@ -1,6 +1,6 @@
 import { TeamsUserCredential } from "@microsoft/teamsfx";
 import { createContext } from "react";
-import { ThemePrepared } from "@fluentui/react-northstar";
+import { ThemePrepared } from "@fluentui/react-components";
 
 export const TeamsFxContext = createContext<{
   theme?: ThemePrepared,

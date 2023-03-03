@@ -1,5 +1,5 @@
 import { useContext, useState } from "react";
-import { Image, Menu } from "@fluentui/react-northstar";
+import { Image, Menu } from "@fluentui/react-components";
 import "./Welcome.css";
 import { EditCode } from "./EditCode";
 import { AzureFunctions } from "./AzureFunctions";

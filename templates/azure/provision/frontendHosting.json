@@ -1,0 +1,54 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "metadata": {
+    "_generator": {
+      "name": "bicep",
+      "version": "0.14.6.61914",
+      "templateHash": "2439363020080256391"
+    }
+  },
+  "parameters": {
+    "provisionParameters": {
+      "type": "secureObject"
+    }
+  },
+  "variables": {
+    "resourceBaseName": "[parameters('provisionParameters').resourceBaseName]",
+    "storageName": "[if(contains(parameters('provisionParameters'), 'frontendHostingStorageName'), parameters('provisionParameters').frontendHostingStorageName, format('{0}tab', variables('resourceBaseName')))]",
+    "storageSku": "[if(contains(parameters('provisionParameters'), 'frontendHostingStorageSku'), parameters('provisionParameters').frontendHostingStorageSku, 'Standard_LRS')]"
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Storage/storageAccounts",
+      "apiVersion": "2021-06-01",
+      "name": "[variables('storageName')]",
+      "kind": "StorageV2",
+      "location": "[resourceGroup().location]",
+      "properties": {
+        "supportsHttpsTrafficOnly": true
+      },
+      "sku": {
+        "name": "[variables('storageSku')]"
+      }
+    }
+  ],
+  "outputs": {
+    "resourceId": {
+      "type": "string",
+      "value": "[resourceId('Microsoft.Storage/storageAccounts', variables('storageName'))]"
+    },
+    "endpoint": {
+      "type": "string",
+      "value": "[format('https://{0}', replace(replace(reference(resourceId('Microsoft.Storage/storageAccounts', variables('storageName')), '2021-06-01').primaryEndpoints.web, 'https://', ''), '/', ''))]"
+    },
+    "domain": {
+      "type": "string",
+      "value": "[replace(replace(reference(resourceId('Microsoft.Storage/storageAccounts', variables('storageName')), '2021-06-01').primaryEndpoints.web, 'https://', ''), '/', '')]"
+    },
+    "indexPath": {
+      "type": "string",
+      "value": "/index.html#"
+    }
+  }
+}

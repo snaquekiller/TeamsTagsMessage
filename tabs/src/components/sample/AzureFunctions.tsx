@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { Button, Loader } from "@fluentui/react-northstar";
+import { Button, Loader } from "@fluentui/react-components";
 import { useData } from "@microsoft/teamsfx-react";
 import * as axios from "axios";
 import { BearerTokenAuthProvider, createApiClient, TeamsUserCredential } from "@microsoft/teamsfx";

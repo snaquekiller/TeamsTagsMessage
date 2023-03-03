@@ -1,0 +1,46 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "metadata": {
+    "_generator": {
+      "name": "bicep",
+      "version": "0.14.6.61914",
+      "templateHash": "16553010540943578545"
+    }
+  },
+  "parameters": {
+    "provisionParameters": {
+      "type": "secureObject"
+    }
+  },
+  "variables": {
+    "resourceBaseName": "[parameters('provisionParameters').resourceBaseName]",
+    "identityName": "[if(contains(parameters('provisionParameters'), 'userAssignedIdentityName'), parameters('provisionParameters').userAssignedIdentityName, format('{0}', variables('resourceBaseName')))]"
+  },
+  "resources": [
+    {
+      "type": "Microsoft.ManagedIdentity/userAssignedIdentities",
+      "apiVersion": "2018-11-30",
+      "name": "[variables('identityName')]",
+      "location": "[resourceGroup().location]"
+    }
+  ],
+  "outputs": {
+    "identityName": {
+      "type": "string",
+      "value": "[variables('identityName')]"
+    },
+    "identityClientId": {
+      "type": "string",
+      "value": "[reference(resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('identityName')), '2018-11-30').clientId]"
+    },
+    "identityResourceId": {
+      "type": "string",
+      "value": "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('identityName'))]"
+    },
+    "identityPrincipalId": {
+      "type": "string",
+      "value": "[reference(resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('identityName')), '2018-11-30').principalId]"
+    }
+  }
+}

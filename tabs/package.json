@@ -3,28 +3,28 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@fluentui/react-northstar": "^0.62.0",
-    "@microsoft/mgt-element": "^2.8.0",
-    "@microsoft/mgt-react": "^2.8.0",
-    "@microsoft/mgt-teamsfx-provider": "^2.8.0",
-    "@microsoft/microsoft-graph-client": "^3.0.1",
-    "@microsoft/teams-js": "^2.2.0",
-    "@microsoft/teamsfx": "^2.0.0",
-    "@microsoft/teamsfx-react": "^2.0.0",
-    "axios": "^0.21.1",
-    "react": "^16.14.0",
-    "react-dom": "^16.14.0",
-    "react-router-dom": "^5.1.2",
+    "@fluentui/react-components": "^9.15.6",
+    "@microsoft/mgt-element": "^2.9.2",
+    "@microsoft/mgt-react": "^2.9.2",
+    "@microsoft/mgt-teamsfx-provider": "^2.9.2",
+    "@microsoft/microsoft-graph-client": "^3.0.5",
+    "@microsoft/teams-js": "^2.9.0",
+    "@microsoft/teamsfx": "^2.2.0",
+    "@microsoft/teamsfx-react": "^2.1.1",
+    "axios": "^1.3.4",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.8.2",
     "react-scripts": "^5.0.1"
   },
   "devDependencies": {
-    "@types/node": "^12.0.0",
-    "@types/react": "^16.14.6",
-    "@types/react-dom": "^16.9.12",
-    "@types/react-router-dom": "^5.1.7",
+    "@types/node": "^18.14.4",
+    "@types/react": "^18.0.28",
+    "@types/react-dom": "^18.0.11",
+    "@types/react-router-dom": "^5.3.3",
     "cross-env": "^7.0.3",
     "env-cmd": "^10.1.0",
-    "typescript": "^4.1.2"
+    "typescript": "^4.9.5"
   },
   "scripts": {
     "dev:teamsfx": "env-cmd --silent -f .env.teamsfx.local npm run start",
@@ -34,7 +34,8 @@
     "build:teamsfx": "cross-env-shell \"env-cmd -f .env.teamsfx.${TEAMS_FX_ENV} npm run build\"",
     "build:teamsfx:dev": "cross-env TEAMS_FX_ENV=dev npm run build:teamsfx",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+		"update-dependencies": "npx -y npm-check-updates -i"
   },
   "eslintConfig": {
     "extends": [

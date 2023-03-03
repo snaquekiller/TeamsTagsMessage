@@ -1,13 +1,19 @@
 {
-    "name": "hello-world-tab-app-with-azure-backend",
-    "version": "0.0.1",
-    "description": "",
-    "author": "",
-    "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1"
-    },
-    "devDependencies": {
-        "@microsoft/teamsfx-cli": "1.*"
-    },
-    "license": "MIT"
+  "name": "hello-world-tab-app-with-azure-backend",
+  "version": "0.0.1",
+  "description": "",
+  "author": "",
+  "scripts": {
+    "megalinter": "npx mega-linter-runner -y",
+    "rome:format": "rome format .",
+    "lint": "./node_modules/.bin/eslint",
+    "update-dependencies": "npx -y npm-check-updates -i"
+  },
+  "devDependencies": {
+    "@microsoft/teamsfx-cli": "^1.2.4",
+    "eslint": "^8.35.0",
+    "eslint-config-airbnb": "^19.0.4",
+    "rome": "^11.0.0"
+  },
+  "license": "MIT"
 }
