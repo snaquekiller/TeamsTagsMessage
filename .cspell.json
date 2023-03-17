@@ -11,6 +11,12 @@
   ],
   "language": "en",
   "noConfigSearch": true,
-  "words": ["megalinter", "oxsecurity"],
+  "words": [
+    "fluentui",
+    "megalinter",
+    "northstar",
+    "oxsecurity",
+    "teamsfx"
+  ],
   "version": "0.2"
 }

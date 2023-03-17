@@ -21,6 +21,8 @@
     <script type="text/javascript">
       microsoftTeams.app.initialize().then(() => {
         microsoftTeams.app.getContext().then(async (context) => {
+          console.log("context", context)
+
           // Generate random state string and store it, so we can verify it in the callback
           var currentURL = new URL(window.location);
           var clientId = currentURL.searchParams.get("clientId");

@@ -1,5 +1,5 @@
 import React from "react";
-import { Avatar, Card, Flex, Skeleton, Text } from "@fluentui/react-components";
+import { Avatar, Card, Flex, Skeleton, Text } from "@fluentui/react-northstar";
 
 export const ProfileCard = (loading: boolean, data?: any) => (
   <Card
