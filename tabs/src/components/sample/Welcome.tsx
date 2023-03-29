@@ -8,6 +8,7 @@ import { Deploy } from "./Deploy";
 import { Publish } from "./Publish";
 import { TeamsFxContext } from "../Context";
 import { app, pages } from "@microsoft/teams-js";
+import ThreadMessage from "../../ThreadedMessages/index";
 
 
 export function Welcome(props: { showFunction?: boolean; environment?: string }) {
@@ -22,11 +23,12 @@ export function Welcome(props: { showFunction?: boolean; environment?: string })
       azure: "Azure environment",
     }[environment] || "local environment";
 
-  const steps = ["local", "azure", "publish"];
+  const steps = ["local", "azure", "publish", "message"];
   const friendlyStepsName: { [key: string]: string } = {
     local: "1. Build your app locally",
     azure: "2. Provision and Deploy to the Cloud",
     publish: "3. Publish to Teams",
+    message: "4. Message chanel",
   };
   const [selectedMenuItem, setSelectedMenuItem] = useState("local");
   const items = steps.map((step) => {
@@ -134,6 +136,12 @@ export function Welcome(props: { showFunction?: boolean; environment?: string })
               <Publish />
             </div>
           )}
+          {selectedMenuItem === "message" && (
+            <div>
+              <ThreadMessage />
+            </div>
+          )}
+
         </div>
       </div>
     </div>
