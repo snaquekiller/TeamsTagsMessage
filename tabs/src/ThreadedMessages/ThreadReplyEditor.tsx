@@ -1,6 +1,6 @@
 import * as React from 'react';
 import * as _ from 'lodash';
-import * as keyboardKey from 'keyboard-key';
+import { getCode, Escape } from 'keyboard-key';
 
 import { Button, Flex, Input, Toolbar, Ref, Chat } from '@fluentui/react-northstar';
 import { toolbarItems } from './mockData';
@@ -33,8 +33,8 @@ const ThreadReplyEditor: React.FC = () => {
   }
 
   const handleOnEditorKeydown = (e: React.KeyboardEvent) => {
-    const eventCode = keyboardKey.getCode(e)
-    if (eventCode === keyboardKey.Escape) {
+    const eventCode = getCode(e)
+    if (eventCode === Escape) {
       setEditMode(false);
       e.stopPropagation();
       e.preventDefault();

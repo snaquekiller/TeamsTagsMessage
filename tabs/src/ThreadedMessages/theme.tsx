@@ -1,5 +1,5 @@
-import { ThemeInput, chatItemSlotClassNames, inputClassName, pxToRem, buttonClassName, imageClassName } from '@fluentui/react-northstar'
-import classNames from './classNames'
+import { ThemeInput, chatItemSlotClassNames, inputClassName, pxToRem, buttonClassName, imageClassName } from '@fluentui/react-northstar';
+import classNames from './classNames';
 
 const customizedTheme: ThemeInput = {
   componentStyles: {

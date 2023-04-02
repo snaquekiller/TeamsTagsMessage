@@ -1,4 +1,3 @@
-import * as React from 'react'
 import { Chat, ChatItemProps, ShorthandCollection, Avatar, Provider } from '@fluentui/react-northstar';
 import ThreadedMessage from './ThreadedMessage';
 import threadChatBehavior from './threadChatBehavior';

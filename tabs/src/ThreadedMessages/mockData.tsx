@@ -1,4 +1,3 @@
-import * as React from 'react'
 import { ThreadReplyProps } from './ThreadReplies'
 
 export const actionMenu = {
