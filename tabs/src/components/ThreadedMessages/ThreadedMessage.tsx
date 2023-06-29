@@ -4,6 +4,8 @@ import threadedMessageBehavior from './threadedMessageBehavior';
 import ThreadReplies, { ThreadReplyProps } from './ThreadReplies';
 import ThreadReplyEditor from './ThreadReplyEditor';
 import ScreenReaderHeaderText from './ScreenReaderHeaderText';
+import { CalendarIcon, MoreIcon } from '@fluentui/react-icons-northstar'
+
 import { actionMenu } from './mockData';
 import classNames from './classNames';
 
@@ -32,12 +34,10 @@ class ThreadedMessage extends React.Component<ThreadedMessageProps> {
         {meeting && (
           <Attachment
             actionable
-            icon="calendar"
+            icon={<CalendarIcon />}
             header={meeting.header}
             description={meeting.description}
-            action={{
-              icon: 'more',
-            }}
+            action={<MoreIcon />}
           />
         )}
       </div>

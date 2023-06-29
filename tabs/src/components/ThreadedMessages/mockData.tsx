@@ -1,19 +1,9 @@
 import { ThreadReplyProps } from './ThreadReplies'
+import { MoreIcon, LikeIcon } from '@fluentui/react-icons-northstar'
 
 export const actionMenu = {
   iconOnly: true,
-  items: [
-    {
-      key: 'like',
-      icon: 'like',
-      title: 'Like',
-    },
-    {
-      key: 'more',
-      icon: 'more',
-      title: 'More actions',
-    },
-  ],
+  items: [ <LikeIcon /> ,< MoreIcon/> ],
 }
 
 export const janeAvatar = {

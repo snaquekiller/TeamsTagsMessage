@@ -5,6 +5,7 @@
   "dependencies": {
     "@fluentui/react": "^8.106.7",
     "@fluentui/react-components": "^9.18.2",
+    "@fluentui/react-icons-northstar": "^0.62.0",
     "@fluentui/react-northstar": "^0.62.0",
     "@microsoft/mgt-element": "^2.9.2",
     "@microsoft/mgt-react": "^2.9.2",

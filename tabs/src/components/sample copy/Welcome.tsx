@@ -10,6 +10,7 @@ import { TeamsFxContext } from "../Context";
 import { app, pages } from "@microsoft/teams-js";
 import ThreadMessage from "../ThreadedMessages/index";
 
+
 export function Welcome(props: { showFunction?: boolean; environment?: string }) {
   const { showFunction, environment } = {
     showFunction: true,
