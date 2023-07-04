@@ -13,3 +13,8 @@ build
 # MegaLinter files
 tmp/
 megalinter-reports/
+
+env/.env.*.user
+env/.env.local
+.backup/*
+/devTools/
